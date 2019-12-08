@@ -1,7 +1,7 @@
 {
   "name": "@holo-host/cryptolib",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "Cross-compatible cryptographic utilities for node/web",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha ./tests/"
@@ -15,8 +15,12 @@
     "type": "git",
     "url": "https://github.com/Holo-Host/chaperone/"
   },
+  "files": [
+    "README.md",
+    "src/*"
+  ],
   "dependencies": {
-    "@holo-host/wasm-key-manager": "file:../key-manager/pkg",
+    "@holo-host/wasm-key-manager": "0.0.5",
     "multihashes": "0.4.15"
   },
   "devDependencies": {

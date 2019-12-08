@@ -2,11 +2,13 @@
 docs/index.html: .jsdoc.json src/*.js
 	npx jsdoc src/*.js --configure .jsdoc.json --destination docs --verbose
 
-docs: docs/index.html
-
 package-lock.json: package.json 
 	npm install
+	touch $@
 node_modules: package-lock.json
+
+
+docs: docs/index.html
 
 
 .PHONY: preview-package publish-docs publish-package test
@@ -19,7 +21,7 @@ publish-package: test
 
 
 CURRENT_BRANCH = $(shell git branch | grep \* | cut -d ' ' -f2)
-publish-docs: pkg
+publish-docs:
 	git branch -D gh-pages || true
 	git checkout -b gh-pages
 	echo "\nBuilding docs"

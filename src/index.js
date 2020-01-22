@@ -2,11 +2,16 @@ const { KeyManager,
 	deriveSeedFrom,
 	from_hcs0, to_hcs0 }		= require('@holo-host/wasm-key-manager');
 const multihash				= require('multihashes');
+const base36				= require('base-x')("0123456789abcdefghijklmnopqrstuvwxyz");
 
 const Codec = {
     "AgentId": {
         decode: from_hcs0,
         encode: to_hcs0,
+    },
+    "Base36": {
+	decode: (str) => base36.decode(str),
+	encode: (buf) => base36.encode(Buffer.from(buf)),
     },
     "Signature": {
         decode: (str) => Buffer.from(str, 'base64'),

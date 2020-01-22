@@ -13,7 +13,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Holo-Host/chaperone/"
+    "url": "https://github.com/Holo-Host/cryptolib-js/"
   },
   "files": [
     "README.md",
@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "@holo-host/wasm-key-manager": "0.0.5",
+    "base-x": "^3.0.7",
     "multihashes": "0.4.15"
   },
   "devDependencies": {

@@ -33,6 +33,34 @@ describe("Codec.AgentId", () => {
     });
 });
 
+describe("Codec.Base36", () => {
+    it("should decode agent ID using base36", async () => {
+        const urlAgentId				= "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";
+        const publicKey					= new Uint8Array([
+              1,   2,   3,   4,   5,   6,   7,
+              8,   9,  10,  11,  12,  13,  14,
+             15,  16,  17,  18,  19,  20,  21,
+             22,  23,  24,  25,  26,  27,  28,
+             29,  30,  31,  32
+        ]);
+
+        expect( Codec.Base36.encode(publicKey)		).to.equal(urlAgentId);
+    });
+
+    it("should encode agent ID into base36", async () => {
+        const urlAgentId				= "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";
+        const publicKey					= new Uint8Array([
+              1,   2,   3,   4,   5,   6,   7,
+              8,   9,  10,  11,  12,  13,  14,
+             15,  16,  17,  18,  19,  20,  21,
+             22,  23,  24,  25,  26,  27,  28,
+             29,  30,  31,  32
+        ]);
+
+        expect( Codec.Base36.encode(publicKey)		).to.equal(urlAgentId);
+    });
+});
+
 describe("Codec.Signature", () => {
     it("should decode Signature string into message bytes", async () => {
         const messageBytes				= Buffer.from("example 1");

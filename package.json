@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha ./tests/"
   },
-  "author": "Holo Inc.",
+  "author": "Holo Ltd.",
   "contributors": [
     "Matthew Brisebois <matthew.brisebois@holo.host>"
   ],

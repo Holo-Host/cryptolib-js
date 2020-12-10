@@ -6,8 +6,27 @@ const { Codec }						= require('../src/index.js');
 const sha256						= (buf) => crypto.createHash('sha256').update( Buffer.from(buf) ).digest();
 
 describe("Codec.AgentId", () => {
+    it("should get agent ID bytes from public key bytes", () => {
+        const publicKey					= new Uint8Array([
+            161, 222, 128, 146, 233, 128,  11,
+            197,  77,  22,   0, 199, 102, 199,
+            105,  12,  19, 193,  24, 250,  79,
+            198, 221, 144, 203,  23, 155, 141,
+            142, 179, 124, 113
+        ]);
+        const agentId					= new Uint8Array([
+	    132,  32,  36, 161, 222, 128, 146, 233,
+	    128,  11, 197,  77,  22,   0, 199, 102,
+	    199, 105,  12,  19, 193,  24, 250,  79,
+	    198, 221, 144, 203,  23, 155, 141, 142,
+	    179, 124, 113, 144,  10,  68, 169
+	]);
+
+	expect( Codec.AgentId.fromPublicKey(publicKey)	).to.deep.equal(agentId);
+    })
+
     it("should decode agent ID into public key bytes", () => {
-        const agentId					= "HcScJip8RCjpuaamzwgSNAGHn5dxtdauzENQVU8g5XInxf65sxHMg9DSmkktbdr";
+        const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
         const publicKey					= new Uint8Array([
             161, 222, 128, 146, 233, 128,  11,
             197,  77,  22,   0, 199, 102, 199,
@@ -20,13 +39,13 @@ describe("Codec.AgentId", () => {
     })
 
     it("should encode public key bytes into agent ID", () => {
-        const agentId					= "HcSCIaicaNCakbrhbaervczNbVha8eascijsiFixc6nbtgr5Drps6h3AKJ733ya";
+        const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
         const publicKey					= new Uint8Array([
-              1,   2,   3,   4,   5,   6,   7,
-              8,   9,  10,  11,  12,  13,  14,
-             15,  16,  17,  18,  19,  20,  21,
-             22,  23,  24,  25,  26,  27,  28,
-             29,  30,  31,  32
+            161, 222, 128, 146, 233, 128,  11,
+            197,  77,  22,   0, 199, 102, 199,
+            105,  12,  19, 193,  24, 250,  79,
+            198, 221, 144, 203,  23, 155, 141,
+            142, 179, 124, 113
         ]);
 
         expect( Codec.AgentId.encode(publicKey)		).to.equal(agentId);

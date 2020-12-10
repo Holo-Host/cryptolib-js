@@ -1,10 +1,13 @@
+[![](https://img.shields.io/npm/v/@holo-host/cryptolib/latest?style=flat-square)](http://npmjs.com/package/@holo-host/cryptolib)
+[![](https://img.shields.io/github/workflow/status/holo-host/cryptolib-js/Node.js%20CI/master?style=flat-square&label=master)](https://github.com/holo-host/cryptolib-js)
 
 # Cross-compatible Cryptographic Utilities (Node/Web)
-
-![](https://img.shields.io/npm/v/@holo-host/cryptolib/latest?style=flat-square)
-
 Contains Holo specific key management implementation (`@holo-host/wasm-key-manager`); as well as
 utilities for some internally standardized codecs (signatures, digests, and Agent IDs).
+
+[![](https://img.shields.io/github/issues-raw/holo-host/cryptolib-js?style=flat-square)](https://github.com/holo-host/cryptolib-js/issues)
+[![](https://img.shields.io/github/issues-closed-raw/holo-host/cryptolib-js?style=flat-square)](https://github.com/holo-host/cryptolib-js/issues?q=is%3Aissue+is%3Aclosed)
+[![](https://img.shields.io/github/issues-pr-raw/holo-host/cryptolib-js?style=flat-square)](https://github.com/holo-host/cryptolib-js/pulls)
 
 ## Usage
 
@@ -12,11 +15,10 @@ utilities for some internally standardized codecs (signatures, digests, and Agen
 const crypto = require('crypto');
 const expect = require('chai').expect;
 
-const { Codec } = require('../src/index.js');
+const { Codec } = require('@holo-host/cryptolib');
 
 const sha256 = (buf) => crypto.createHash('sha256').update( Buffer.from(buf) ).digest();
 
-const agentId = "HcScJip8RCjpuaamzwgSNAGHn5dxtdauzENQVU8g5XInxf65sxHMg9DSmkktbdr";
 const publicKey = new Uint8Array([
  161, 222, 128, 146, 233, 128,  11,
  197,  77,  22,   0, 199, 102, 199,
@@ -24,11 +26,26 @@ const publicKey = new Uint8Array([
  198, 221, 144, 203,  23, 155, 141,
  142, 179, 124, 113
 ]);
+Codec.AgentId.fromPublicKey( publicKey );
+// Uint8Array([
+//     132,  32,  36, 161, 222, 128, 146, 233,
+//     128,  11, 197,  77,  22,   0, 199, 102,
+//     199, 105,  12,  19, 193,  24, 250,  79,
+//     198, 221, 144, 203,  23, 155, 141, 142,
+//     179, 124, 113, 144,  10,  68, 169
+// ]);
 
-expect( Codec.AgentId.decode(agentId)  ).to.deep.equal(publicKey);
+
+Codec.AgentId.decode("uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp");
+// Uint8Array([
+//     161, 222, 128, 146, 233, 128,  11,
+//     197,  77,  22,   0, 199, 102, 199,
+//     105,  12,  19, 193,  24, 250,  79,
+//     198, 221, 144, 203,  23, 155, 141,
+//     142, 179, 124, 113
+// ]);
 
 
-const agentId = "HcSCIaicaNCakbrhbaervczNbVha8eascijsiFixc6nbtgr5Drps6h3AKJ733ya";
 const publicKey = new Uint8Array([
    1,   2,   3,   4,   5,   6,   7,
    8,   9,  10,  11,  12,  13,  14,
@@ -36,8 +53,9 @@ const publicKey = new Uint8Array([
   22,  23,  24,  25,  26,  27,  28,
   29,  30,  31,  32
 ]);
+Codec.AgentId.encode(publicKey);
+// "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
 
-expect( Codec.AgentId.encode(publicKey)   ).to.equal(agentId);
 
 const messageBytes = Buffer.from("example 1");
 const base64String = "ZXhhbXBsZSAx";

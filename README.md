@@ -26,13 +26,16 @@ const publicKey = new Uint8Array([
  198, 221, 144, 203,  23, 155, 141,
  142, 179, 124, 113
 ]);
-Codec.AgentId.fromPublicKey( publicKey );
-// Uint8Array([
-//     132,  32,  36, 161, 222, 128, 146, 233,
-//     128,  11, 197,  77,  22,   0, 199, 102,
-//     199, 105,  12,  19, 193,  24, 250,  79,
-//     198, 221, 144, 203,  23, 155, 141, 142,
-//     179, 124, 113, 144,  10,  68, 169
+const publicKeyBuffer            =  Buffer.from(publicKey);
+
+Codec.AgentId.holoHashFromPublicKey( publicKeyBuffer );
+// Buffer.from(agentId);
+// const agentId					= new Uint8Array([
+//   132,  32,  36, 161, 222, 128, 146, 233,
+//   128,  11, 197,  77,  22,   0, 199, 102,
+//   199, 105,  12,  19, 193,  24, 250,  79,
+//   198, 221, 144, 203,  23, 155, 141, 142,
+//   179, 124, 113, 144,  10,  68, 169
 // ]);
 
 
@@ -69,15 +72,29 @@ const messageBytes = Buffer.from("example 2");
 expect( Codec.Signature.encode(messageBytes) ).to.equal(base64String);
 
 
-const hashString = "QmNZAJfVYoCASiPc3uYZXrvhRFbxJLxG18R2Ga4ZXfP4kR";
-const hashBytes = await sha256(new Uint8Array([0xca, 0xfe]));
+const holoHashType = "entry";
+const hashString = "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+const dataBytes					= new Uint8Array([
+  88,	 43,  0,	 130,	130, 164, 145, 252,
+  50,	 36,  8,	 37,	143, 125, 49,	 95,
+  241, 139, 45,	 95,	183, 5,		123, 133,	
+  203, 141,	250, 107,	100, 170, 165, 193
+]);
+const dataBuffer            =  Buffer.from(dataBytes);
 
-expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBytes);
+expect(Codec.Digest.decode(hashString)).to.deep.equal(dataBuffer);
 
 
-const hashBytes = await sha256(new Uint8Array([0xba, 0xbe]));
-const hashString = "QmeTu8d5sUNULwS72NxLNTMhLZfPma4qcWvG2LqxiUz1Gf";
+expect(Codec.Digest.encode(holoHashType, buffer)).to.equal(hashString);
 
-expect( Codec.Digest.encode(hashBytes)).to.equal(hashString);
 
+const holoHashBytes					= new Uint8Array([
+  132, 33,  36,	 88,	43,  0,	 	130, 130,
+  164, 145, 252, 50,	36,  8,   37,	 143,
+  125, 49,  95,  241, 139, 45,  95,	 183,
+  5,	 123, 133, 203, 141, 250, 107, 100, 
+  170, 165, 193, 48,  200, 28,  230
+]);
+const holoHashBuffer = Buffer.from(holoHashBytes)
+expect(Codec.Digest.holoHashFromBuffer(dataBuffer)).to.deep.equal(holoHashBuffer);
 ```

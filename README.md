@@ -97,4 +97,6 @@ const holoHashBytes					= new Uint8Array([
 ]);
 const holoHashBuffer = Buffer.from(holoHashBytes)
 expect(Codec.Digest.holoHashFromBuffer(dataBuffer)).to.deep.equal(holoHashBuffer);
+
+expect(Codec.Digest.decodeToHoloHash(hashString)).to.deep.equal(holoHashBuffer);
 ```

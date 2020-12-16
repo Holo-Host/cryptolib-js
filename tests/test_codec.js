@@ -184,7 +184,7 @@ describe("Codec.Digest", () => {
 		expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBuffer);
 	});
 
-	it("should decode HoloHash String into Buffer", async () => {
+	it("should decode HoloHash String into HoloHash Buffer", async () => {
 		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 		const holoHashBytes					= new Uint8Array([
 			132, 33,  36,	 88,	43,  0,	 	130, 130,

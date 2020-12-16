@@ -6,7 +6,7 @@ const { Codec }						= require('../src/index.js');
 const sha256						= (buf) => crypto.createHash('sha256').update( Buffer.from(buf) ).digest();
 
 describe("Codec.AgentId", () => {
-	it("should get holochain agent ID buffer from public key buffer", () => {
+	it("should get Holochain HoloHash agent ID buffer from public key buffer", () => {
 		const publicKey					= new Uint8Array([
 			161, 222, 128, 146, 233, 128,  11,
 			197,  77,  22,   0, 199, 102, 199,
@@ -28,7 +28,7 @@ describe("Codec.AgentId", () => {
 		expect( Codec.AgentId.holoHashFromPublicKey(publicKeyBuffer)	).to.deep.equal(agentIdBuffer);
 	})
 
-	it("should decode agent ID into public key bytes", () => {
+	it("should decode Holochain HoloHash agent ID into public key bytes", () => {
 		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
 		const publicKey					= new Uint8Array([
 			161, 222, 128, 146, 233, 128,  11,
@@ -38,10 +38,10 @@ describe("Codec.AgentId", () => {
 			142, 179, 124, 113
 		]);
 
-expect( Codec.AgentId.decode(agentId)		).to.deep.equal(publicKey);
+		expect( Codec.AgentId.decode(agentId)		).to.deep.equal(publicKey);
 	})
 
-	it("should encode public key bytes into agent ID", () => {
+	it("should encode public key bytes into Holochain HoloHash agent ID", () => {
 			const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
 			const publicKey					= new Uint8Array([
 				161, 222, 128, 146, 233, 128,  11,
@@ -91,7 +91,7 @@ describe("Codec.Base58", () => {
 		expect( Codec.Base58.decode(hashString)).to.deep.equal(hashBytes);
 	});
 
-	it("should encode SHA-256 digest bytes into SHA-256 multihash (with base658)", async () => {
+	it("should encode SHA-256 digest bytes into SHA-256 multihash (with base58)", async () => {
 		const hashBytes					= await sha256(new Uint8Array([0xba, 0xbe]));
 		const hashString				= "QmeTu8d5sUNULwS72NxLNTMhLZfPma4qcWvG2LqxiUz1Gf";
 
@@ -147,7 +147,7 @@ describe("Codec.Signature", () => {
 });
 
 describe("Codec.Digest", () => {
-	it("should get holohash from data buffer", () => {
+	it("should get holohash buffer from raw buffer", () => {
 		const dataBytes					= new Uint8Array([
 			88,	 43,  0,	 130,	130, 164, 145, 252,
 			50,	 36,  8,	 37,	143, 125, 49,	 95,
@@ -171,7 +171,7 @@ describe("Codec.Digest", () => {
 		expect( Codec.Digest.holoHashFromBuffer(HOLO_HASH_ENTRY_PREFIX, dataBuffer)	).to.deep.equal(holoHashBuffer);
 	})
 
-	it("should decode HoloHash String into Buffer", async () => {
+	it("should decode HoloHash string into raw buffer", async () => {
 		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 		const hashBytes					= new Uint8Array([
 			88,	 43,  0,	 130,	130, 164, 145, 252,
@@ -184,7 +184,7 @@ describe("Codec.Digest", () => {
 		expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBuffer);
 	});
 
-	it("should decode HoloHash String into HoloHash Buffer", async () => {
+	it("should decode HoloHash string into HoloHash buffer", async () => {
 		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 		const holoHashBytes					= new Uint8Array([
 			132, 33,  36,	 88,	43,  0,	 	130, 130,
@@ -199,7 +199,7 @@ describe("Codec.Digest", () => {
 		expect( Codec.Digest.decodeToHoloHash(hashString)).to.deep.equal(holoHashBuffer);
 });
 
-	it("should encode Buffer into HoloHash", async () => {
+	it("should encode raw buffer into HoloHash string", async () => {
 		const data					= new Uint8Array([
 			88,	 43,  0,	 130,	130, 164, 145, 252,
 			50,	 36,  8,	 37,	143, 125, 49,	 95,

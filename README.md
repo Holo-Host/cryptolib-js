@@ -39,7 +39,7 @@ Codec.AgentId.holoHashFromPublicKey( publicKeyBuffer );
 // ]);
 
 
-Codec.AgentId.decode("uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp");
+Codec.AgentId.decode("hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp");
 // Uint8Array([
 //     161, 222, 128, 146, 233, 128,  11,
 //     197,  77,  22,   0, 199, 102, 199,
@@ -57,7 +57,7 @@ const publicKey = new Uint8Array([
   29,  30,  31,  32
 ]);
 Codec.AgentId.encode(publicKey);
-// "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
+// "hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
 
 
 const messageBytes = Buffer.from("example 1");
@@ -73,7 +73,7 @@ expect( Codec.Signature.encode(messageBytes) ).to.equal(base64String);
 
 
 const holoHashType = "entry";
-const hashString = "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+const hashString = "hCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 const dataBytes					= new Uint8Array([
   88,	 43,  0,	 130,	130, 164, 145, 252,
   50,	 36,  8,	 37,	143, 125, 49,	 95,

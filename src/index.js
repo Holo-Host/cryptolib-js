@@ -33,6 +33,27 @@ function check_pub_key_length (pubkey) {
 	return pubkey;
 }
 
+function check_holohash_pub_key_length (pubkey) {
+	if (Buffer.byteLength(pubkey) !== 39)
+		throw new Error(`Unexpected pubkey length of ${Buffer.byteLength(pubkey)}.  Should be 39 bytes`);
+	return pubkey;
+}
+
+function convert_b64_to_holohash_b64 (rawBase64) {
+	let holoHashbase64 = '';
+	const len = rawBase64.length;
+	for (let i = 0; i < len; i++) {
+		let char = rawBase64[i];
+		if (char === '/') {
+			char = '_'
+		} else if (char === '+') {
+			char = '-'
+		}
+		holoHashbase64 += char;
+	}
+	return holoHashbase64;
+}
+
 // Generate holohash 4 byte (or u32) dht "location" - used for checksum and dht sharding
 function calc_dht_bytes ( data ) {
 	const digest				= blake.blake2b( data, null, 16 );
@@ -59,10 +80,17 @@ const Codec = {
 	    ]);
 		},
 		decode: (base64) => {
-			return Buffer.from(base64.slice(1), "base64").slice(3,-4);
+		return Buffer.from(base64.slice(1), "base64").slice(3,-4);
 		},
 		encode: (buf) => {
-	    return "u" + Codec.Base64.encode(Codec.AgentId.holoHashFromPublicKey(buf));
+		return "u" + Codec.Base64.encodeToHoloHashB64(Codec.AgentId.holoHashFromPublicKey(buf));
+		},
+		decodeToHoloHash:(base64) => {
+		return Buffer.from(base64.slice(1), "base64");
+		},
+		encodeFromHoloHash: (buf) => {
+		check_holohash_pub_key_length(buf);
+		return "u" + Codec.Base64.encodeToHoloHashB64(buf);
 		},
 	},
 	"Base36": {
@@ -83,14 +111,17 @@ const Codec = {
 			return buffer
 		},
 		encode: (buf) => {
-			const bytes = new Uint8Array(buf);
-			const len = bytes.byteLength;
-			let binary = "";
-			for (let i = 0; i < len; i++) {
-					binary += String.fromCharCode(bytes[i]);
-			}
-			const base64 = Buffer.from(binary, "binary").toString("base64");
+			const base64 = buf.toString("base64");
 			return base64
+		},
+		base64ToHoloHashB64: (base64) => {
+			const HHBase64 = convert_b64_to_holohash_b64(base64);
+			return HHBase64
+		},
+		encodeToHoloHashB64: (buf) => {
+			const rawBase64 = buf.toString("base64");
+			const HHBase64 = convert_b64_to_holohash_b64(rawBase64);
+			return HHBase64
 		},
 
 	},
@@ -106,12 +137,12 @@ const Codec = {
 				calc_dht_bytes(buf)
 			]);
 	},
-		decodeToHoloHash:(base64) => Buffer.from(base64.slice(1), "base64"),
 		decode: (base64) => Buffer.from(base64.slice(1), "base64").slice(3,-4),
 		encode: (holoHashType, buf) => {
 			const holoHashPrefix = getHoloHashPrefix(holoHashType);
-			return "u" + Codec.Base64.encode(Codec.Digest.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
+			return "u" + Codec.Base64.encodeToHoloHashB64(Codec.Digest.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
 		},
+		decodeToHoloHash:(base64) => Buffer.from(base64.slice(1), "base64"),
 	},
 };
 

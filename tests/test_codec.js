@@ -29,7 +29,7 @@ describe("Codec.AgentId", () => {
 	})
 
 	it("should decode Holochain HoloHash agent ID into public key bytes", () => {
-		const agentId					= "hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
+		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
 		const publicKey					= new Uint8Array([
 			161, 222, 128, 146, 233, 128,  11,
 			197,  77,  22,   0, 199, 102, 199,
@@ -42,7 +42,7 @@ describe("Codec.AgentId", () => {
 	})
 
 	it("should encode public key bytes into Holochain HoloHash agent ID", () => {
-			const agentId					= "hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
+			const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
 			const publicKey					= new Uint8Array([
 				161, 222, 128, 146, 233, 128,  11,
 				197,  77,  22,   0, 199, 102, 199,
@@ -172,7 +172,7 @@ describe("Codec.Digest", () => {
 	})
 
 	it("should decode HoloHash string into raw buffer", async () => {
-		const hashString				= "hCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 		const hashBytes					= new Uint8Array([
 			88,	 43,  0,	 130,	130, 164, 145, 252,
 			50,	 36,  8,	 37,	143, 125, 49,	 95,
@@ -185,7 +185,7 @@ describe("Codec.Digest", () => {
 	});
 
 	it("should decode HoloHash string into HoloHash buffer", async () => {
-		const hashString				= "hCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 		const holoHashBytes					= new Uint8Array([
 			132, 33,  36,	 88,	43,  0,	 	130, 130,
 			164, 145, 252, 50,	36,  8,   37,	 143,
@@ -207,7 +207,7 @@ describe("Codec.Digest", () => {
 			203, 141,	250, 107,	100, 170, 165, 193
 		]);
 
-		const hashString				=  "hCEkWCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcEwyBzm";
+		const hashString				=  "uhCEkWCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcEwyBzm";
 
 		expect( Codec.Digest.encode('entry', data)).to.equal(hashString);
 	});

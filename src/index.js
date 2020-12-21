@@ -59,10 +59,10 @@ const Codec = {
 	    ]);
 		},
 		decode: (base64) => {
-			return Buffer.from(base64, "base64").slice(3,-4);
+			return Buffer.from(base64.slice(1), "base64").slice(3,-4);
 		},
 		encode: (buf) => {
-	    return Codec.Base64.encode(Codec.AgentId.holoHashFromPublicKey(buf));
+	    return "u" + Codec.Base64.encode(Codec.AgentId.holoHashFromPublicKey(buf));
 		},
 	},
 	"Base36": {
@@ -106,11 +106,11 @@ const Codec = {
 				calc_dht_bytes(buf)
 			]);
 	},
-		decodeToHoloHash:(base64) => Buffer.from(base64, "base64"),
-		decode: (base64) => Buffer.from(base64, "base64").slice(3,-4),
+		decodeToHoloHash:(base64) => Buffer.from(base64.slice(1), "base64"),
+		decode: (base64) => Buffer.from(base64.slice(1), "base64").slice(3,-4),
 		encode: (holoHashType, buf) => {
 			const holoHashPrefix = getHoloHashPrefix(holoHashType);
-			return Codec.Base64.encode(Codec.Digest.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
+			return "u" + Codec.Base64.encode(Codec.Digest.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
 		},
 	},
 };

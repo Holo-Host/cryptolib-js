@@ -31,16 +31,10 @@ const getHoloHashPrefix = holoHashType => {
 	return holoHashPrefix;
 }
 
-function check_pub_key_length (pubkey) {
-	if (Buffer.byteLength(pubkey) !== 32)
-		throw new Error(`Unexpected pubkey length of ${Buffer.byteLength(pubkey)}.  Should be 32 bytes`);
-	return pubkey;
-}
-
-function check_holohash_pub_key_length (pubkey) {
-	if (Buffer.byteLength(pubkey) !== 39)
-		throw new Error(`Unexpected pubkey length of ${Buffer.byteLength(pubkey)}.  Should be 39 bytes`);
-	return pubkey;
+function check_length (buf, expectedLength) {
+	if (Buffer.byteLength(buf) !== expectedLength)
+		throw new Error(`Unexpected buffer length of ${Buffer.byteLength(buf)}.  Buffer should be ${expectedLength} bytes.`);
+	return buf;
 }
 
 function convert_b64_to_holohash_b64 (rawBase64) {
@@ -76,25 +70,16 @@ function calc_dht_bytes ( data ) {
 const Codec = {
 	"AgentId": {
 		decode: (base64) => Codec.HoloHash.decode(base64),
-		encode: (buf) => {
-		check_pub_key_length(Buffer.from(buf));
-		return Codec.Base64.encodeToHoloHashB64(Codec.HoloHash.encode("agent", Buffer.from(buf)));
-		},
+		encode: (buf) =>  Codec.HoloHash.encode("agent", Buffer.from(buf)),
 		decodeToHoloHash:(base64) => {
-		return Buffer.from(base64.slice(1), "base64");
-		},
-		encodeFromHoloHash: (buf) => {
-		check_holohash_pub_key_length(buf);
-		return "u" + Codec.Base64.encodeToHoloHashB64(buf);
+			const buf = Buffer.from(base64.slice(1), "base64");
+			check_length(Buffer.from(buf), 39);
+			return buf;
 		},
 	},
 	"Base36": {
 		decode: (str) => base36.decode(str),
 		encode: (buf) => base36.encode(Buffer.from(buf)),
-	},
-	"Base58":{
-		decode: (str) => multihash.decode(multihash.fromB58String(str)).digest,
-		encode: (buf) => multihash.toB58String(multihash.encode(Buffer.from(buf), "sha2-256")),
 	},
 	"Base64": {
 		decode: (base64) => {
@@ -105,47 +90,53 @@ const Codec = {
 			}
 			return buffer
 		},
-		encode: (buf) => {
-			const base64 = buf.toString("base64");
-			return base64
-		},
-		base64ToHoloHashB64: (base64) => {
-			const HHBase64 = convert_b64_to_holohash_b64(base64);
-			return HHBase64
-		},
-		encodeToHoloHashB64: (buf) => {
-			const rawBase64 = buf.toString("base64");
-			const HHBase64 = convert_b64_to_holohash_b64(rawBase64);
-			return HHBase64;
-		},
-
+		encode: (buf) => Buffer.from(buf).toString("base64"),
 	},
 	"HoloHash": {
+		holoHashStringFromB64: (base64) => convert_b64_to_holohash_b64(base64),
 		holoHashFromBuffer: (holoHashPrefix, buf) => {
+			check_length(Buffer.from(buf), 32);
 			return Buffer.concat([
 				holoHashPrefix,
 				buf,
 				calc_dht_bytes(buf)
 			]);
 		},
-		decode: (base64) => Buffer.from(base64.slice(1), "base64").slice(3,-4),
 		encode: (holoHashType, buf) => {
 			const holoHashPrefix = getHoloHashPrefix(holoHashType);
-			return "u" + Codec.Base64.encodeToHoloHashB64(Codec.HoloHash.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
-		}
+			if (Buffer.byteLength(buf) === 39) {
+				const compareBuf = Buffer.alloc(3);
+				buf.copy(compareBuf, 0, 0, 3);
+				if (Buffer.compare(compareBuf, holoHashPrefix) === 0) {
+					// encoding from holohash buffer
+					return "u" + Codec.HoloHash.holoHashStringFromB64(Codec.Base64.encode(buf));
+				} else {
+					throw new Error(`Unexpected buffer length of ${Buffer.byteLength(buf)}.  Buffer should be 32 bytes.`);
+				}
+			} 
+			// encoding from raw buffer
+			const rawBase64 = Codec.HoloHash.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)).toString("base64");
+			return "u" + Codec.HoloHash.holoHashStringFromB64(rawBase64);
+		},
+		decode: (base64) => {
+			const buf = Buffer.from(base64.slice(1), "base64").slice(3,-4);
+			check_length(Buffer.from(buf), 32);
+			return buf;
+		},
 	},
 	"Signature": {
 		decode: (base64) => Buffer.from(base64, "base64"),
 		encode: (buf) => Codec.Base64.encode(Buffer.from(buf)),
 	},
 	"Digest": {
-		decode: (base64) => Codec.HoloHash.decode(base64),
+		decode: (base64) => multihash.decode(Codec.Base64.decode(base64)).digest,
 		encode: (data) => {
-			const buf = Buffer.from( typeof data === "string" ? data : SerializeJSON( data ) )
-			const sha256 = multihash.encode(buf, "sha2-512");
-			return Codec.HoloHash.encode('entry', Buffer.from(sha256))
+			let buf = data;
+			if(!Buffer.isBuffer(data) ) {
+				buf = Buffer.from( typeof data === "string" ? data : SerializeJSON( data ) );
+			}
+			return Codec.Base64.encode(Buffer.from(multihash.encode(buf, "sha2-256")));
 		},
-		decodeToHoloHash:(base64) => Buffer.from(base64.slice(1), "base64"),
 	},
 };
 

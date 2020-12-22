@@ -2,6 +2,7 @@ const { KeyManager,
 	deriveSeedFrom }		= require("@holo-host/wasm-key-manager");
 const blake				= require("blakejs");
 const multihash				= require("multihashes");
+const SerializeJSON				= require("json-stable-stringify");
 const base36				= require("base-x")("0123456789abcdefghijklmnopqrstuvwxyz");
 
 const HOLO_HASH_AGENT_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x20, 0x24]).buffer);
@@ -12,6 +13,9 @@ const HOLO_HASH_DNA_PREFIX		  = Buffer.from(new Uint8Array([0x84, 0x2d, 0x24]).b
 const getHoloHashPrefix = holoHashType => {
 	let holoHashPrefix;
 	switch (holoHashType) {
+		case "agent":
+			holoHashPrefix = HOLO_HASH_AGENT_PREFIX;
+			break;
 		case "header":
 			holoHashPrefix = HOLO_HASH_HEADER_PREFIX;
 			break;
@@ -71,19 +75,10 @@ function calc_dht_bytes ( data ) {
 
 const Codec = {
 	"AgentId": {
-		holoHashFromPublicKey: (buf) => {
-			check_pub_key_length(buf);
-	    return Buffer.concat([
-				HOLO_HASH_AGENT_PREFIX,
-				buf,
-				calc_dht_bytes(buf)
-	    ]);
-		},
-		decode: (base64) => {
-		return Buffer.from(base64.slice(1), "base64").slice(3,-4);
-		},
+		decode: (base64) => Codec.HoloHash.decode(base64),
 		encode: (buf) => {
-		return "u" + Codec.Base64.encodeToHoloHashB64(Codec.AgentId.holoHashFromPublicKey(buf));
+		check_pub_key_length(Buffer.from(buf));
+		return Codec.Base64.encodeToHoloHashB64(Codec.HoloHash.encode("agent", Buffer.from(buf)));
 		},
 		decodeToHoloHash:(base64) => {
 		return Buffer.from(base64.slice(1), "base64");
@@ -121,26 +116,34 @@ const Codec = {
 		encodeToHoloHashB64: (buf) => {
 			const rawBase64 = buf.toString("base64");
 			const HHBase64 = convert_b64_to_holohash_b64(rawBase64);
-			return HHBase64
+			return HHBase64;
 		},
 
 	},
-	"Signature": {
-		decode: (base64) => Buffer.from(base64, "base64"),
-		encode: (buf) => Codec.Base64.encode(Buffer.from(buf)),
-	},
-	"Digest": {
+	"HoloHash": {
 		holoHashFromBuffer: (holoHashPrefix, buf) => {
 			return Buffer.concat([
 				holoHashPrefix,
 				buf,
 				calc_dht_bytes(buf)
 			]);
-	},
+		},
 		decode: (base64) => Buffer.from(base64.slice(1), "base64").slice(3,-4),
 		encode: (holoHashType, buf) => {
 			const holoHashPrefix = getHoloHashPrefix(holoHashType);
-			return "u" + Codec.Base64.encodeToHoloHashB64(Codec.Digest.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
+			return "u" + Codec.Base64.encodeToHoloHashB64(Codec.HoloHash.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)))
+		}
+	},
+	"Signature": {
+		decode: (base64) => Buffer.from(base64, "base64"),
+		encode: (buf) => Codec.Base64.encode(Buffer.from(buf)),
+	},
+	"Digest": {
+		decode: (base64) => Codec.HoloHash.decode(base64),
+		encode: (data) => {
+			const buf = Buffer.from( typeof data === "string" ? data : SerializeJSON( data ) )
+			const sha256 = multihash.encode(buf, "sha2-512");
+			return Codec.HoloHash.encode('entry', Buffer.from(sha256))
 		},
 		decodeToHoloHash:(base64) => Buffer.from(base64.slice(1), "base64"),
 	},

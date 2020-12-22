@@ -6,28 +6,6 @@ const { Codec }						= require('../src/index.js');
 const sha256						= (buf) => crypto.createHash('sha256').update( Buffer.from(buf) ).digest();
 
 describe("Codec.AgentId", () => {
-	it("should get HoloHash agent pubkey buffer from public key buffer", () => {
-		const publicKey					= new Uint8Array([
-			161, 222, 128, 146, 233, 128,  11,
-			197,  77,  22,   0, 199, 102, 199,
-			105,  12,  19, 193,  24, 250,  79,
-			198, 221, 144, 203,  23, 155, 141,
-			142, 179, 124, 113
-		]);
-		const publicKeyBuffer            =  Buffer.from(publicKey);
-
-		const holohashPubKey					= new Uint8Array([
-			132,  32,  36, 161, 222, 128, 146, 233,
-			128,  11, 197,  77,  22,   0, 199, 102,
-			199, 105,  12,  19, 193,  24, 250,  79,
-			198, 221, 144, 203,  23, 155, 141, 142,
-			179, 124, 113, 144,  10,  68, 169
-		]);
-		const holohashPubKeyBuffer            =  Buffer.from(holohashPubKey);
-
-		expect( Codec.AgentId.holoHashFromPublicKey(publicKeyBuffer)	).to.deep.equal(holohashPubKeyBuffer);
-	})
-
 	it("should decode HoloHash agent ID into public key bytes", () => {
 		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
 		const publicKey					= new Uint8Array([
@@ -197,7 +175,7 @@ describe("Codec.Signature", () => {
 	});
 });
 
-describe("Codec.Digest", () => {
+describe("Codec.HoloHash", () => {
 	it("should get holohash buffer from raw buffer", () => {
 		const dataBytes					= new Uint8Array([
 			88,	 43,  0,	 130,	130, 164, 145, 252,
@@ -219,8 +197,8 @@ describe("Codec.Digest", () => {
 
 		const HOLO_HASH_ENTRY_PREFIX	= Buffer.from(new Uint8Array([0x84, 0x21, 0x24]).buffer);
 
-		expect( Codec.Digest.holoHashFromBuffer(HOLO_HASH_ENTRY_PREFIX, dataBuffer)	).to.deep.equal(holoHashBuffer);
-	})
+		expect( Codec.HoloHash.holoHashFromBuffer(HOLO_HASH_ENTRY_PREFIX, dataBuffer)	).to.deep.equal(holoHashBuffer);
+	});
 
 	it("should decode HoloHash string into raw buffer", async () => {
 		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
@@ -232,22 +210,7 @@ describe("Codec.Digest", () => {
 		]);
 		const hashBuffer            =  Buffer.from(hashBytes)
 
-		expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBuffer);
-	});
-
-	it("should decode HoloHash string into HoloHash buffer", async () => {
-		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
-		const holoHashBytes					= new Uint8Array([
-			132, 33,  36,	 88,	43,  0,	 	130, 130,
-			164, 145, 252, 50,	36,  8,   37,	 143,
-			125, 49,  95,  241, 139, 45,  95,	 183,
-			5,	 123, 133, 203, 141, 250, 107, 100, 
-			170, 165, 193, 48,  200, 28,  230
-		]);
-
-		const holoHashBuffer            =  Buffer.from(holoHashBytes);
-
-		expect( Codec.Digest.decodeToHoloHash(hashString)).to.deep.equal(holoHashBuffer);
+		expect( Codec.HoloHash.decode(hashString)).to.deep.equal(hashBuffer);
 	});
 
 	it("should encode raw buffer into HoloHash string", async () => {
@@ -260,6 +223,51 @@ describe("Codec.Digest", () => {
 
 		const hashString				=  "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 
-		expect( Codec.Digest.encode('entry', data)).to.equal(hashString);
+		expect( Codec.HoloHash.encode('entry', data)).to.equal(hashString);
+	});
+});
+
+
+describe("Codec.Digest", () => {
+	// it("should decode HoloHash string into raw buffer", async () => {
+	// 	const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+	// 	const hashBytes					= new Uint8Array([
+	// 		88,	 43,  0,	 130,	130, 164, 145, 252,
+	// 		50,	 36,  8,	 37,	143, 125, 49,	 95,
+	// 		241, 139, 45,	 95,	183, 5,		123, 133,	
+	// 		203, 141,	250, 107,	100, 170, 165, 193
+	// 	]);
+	// 	const hashBuffer            =  Buffer.from(hashBytes)
+
+	// 	expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBuffer);
+	// });
+
+	// it("should decode HoloHash string into HoloHash buffer", async () => {
+	// 	const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+	// 	const holoHashBytes					= new Uint8Array([
+	// 		132, 33,  36,	 88,	43,  0,	 	130, 130,
+	// 		164, 145, 252, 50,	36,  8,   37,	 143,
+	// 		125, 49,  95,  241, 139, 45,  95,	 183,
+	// 		5,	 123, 133, 203, 141, 250, 107, 100, 
+	// 		170, 165, 193, 48,  200, 28,  230
+	// 	]);
+
+	// 	const holoHashBuffer            =  Buffer.from(holoHashBytes);
+
+	// 	expect( Codec.Digest.decodeToHoloHash(hashString)).to.deep.equal(holoHashBuffer);
+	// });
+
+	it("should encode raw buffer into HoloHash string", async () => {
+		const jsonData				=  {
+			"test": "information",
+			"this": {
+				"will": ["be hashed into", "a sha256 then", "put into a holohash"],
+				"number": 1
+			}
+		};
+		
+		const hashString				=  "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
+		
+		expect( Codec.Digest.encode(jsonData)).to.equal(hashString);
 	});
 });

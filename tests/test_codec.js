@@ -148,9 +148,7 @@ describe("Codec.HoloHash", () => {
 
 		const holoHashBuffer            =  Buffer.from(holoHashBytes);
 
-		const HOLO_HASH_ENTRY_PREFIX	= Buffer.from(new Uint8Array([0x84, 0x21, 0x24]).buffer);
-
-		expect( Codec.HoloHash.holoHashFromBuffer(HOLO_HASH_ENTRY_PREFIX, dataBuffer)	).to.deep.equal(holoHashBuffer);
+		expect( Codec.HoloHash.holoHashFromBuffer('entry', dataBuffer)	).to.deep.equal(holoHashBuffer);
 	});
 
 	it("should decode HoloHash string into raw buffer", async () => {

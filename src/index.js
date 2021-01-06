@@ -8,7 +8,7 @@ const base36				= require("base-x")("0123456789abcdefghijklmnopqrstuvwxyz");
 const HOLO_HASH_AGENT_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x20, 0x24]).buffer);
 const HOLO_HASH_HEADER_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x29, 0x24]).buffer);
 const HOLO_HASH_ENTRY_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x21, 0x24]).buffer);
-const HOLO_HASH_DNA_PREFIX		  = Buffer.from(new Uint8Array([0x84, 0x2d, 0x24]).buffer);
+const HOLO_HASH_DNA_PREFIX		    = Buffer.from(new Uint8Array([0x84, 0x2d, 0x24]).buffer);
 
 const getHoloHashPrefix = holoHashType => {
 	let holoHashPrefix;
@@ -94,7 +94,8 @@ const Codec = {
 	},
 	"HoloHash": {
 		holoHashStringFromB64: (base64) => convert_b64_to_holohash_b64(base64),
-		holoHashFromBuffer: (holoHashPrefix, buf) => {
+		holoHashFromBuffer: (holoHashType, buf) => {
+			const holoHashPrefix = getHoloHashPrefix(holoHashType);
 			check_length(Buffer.from(buf), 32);
 			return Buffer.concat([
 				holoHashPrefix,
@@ -103,10 +104,13 @@ const Codec = {
 			]);
 		},
 		encode: (holoHashType, buf) => {
-			const holoHashPrefix = getHoloHashPrefix(holoHashType);
+			if (typeof holoHashType !== 'string'){
+				throw new Error('First argument must be a string declaring the type of HoloHash to be encoded. Accepted HoloHash types are: header, entry, dna, and agent.')
+			}
 			if (Buffer.byteLength(buf) === 39) {
 				const compareBuf = Buffer.alloc(3);
 				buf.copy(compareBuf, 0, 0, 3);
+				const holoHashPrefix = getHoloHashPrefix(holoHashType.toLowerCase());
 				if (Buffer.compare(compareBuf, holoHashPrefix) === 0) {
 					// encoding from holohash buffer
 					return "u" + Codec.HoloHash.holoHashStringFromB64(Codec.Base64.encode(buf));
@@ -115,7 +119,7 @@ const Codec = {
 				}
 			} 
 			// encoding from raw buffer
-			const rawBase64 = Codec.HoloHash.holoHashFromBuffer(holoHashPrefix, Buffer.from(buf)).toString("base64");
+			const rawBase64 = Codec.HoloHash.holoHashFromBuffer(holoHashType.toLowerCase(), Buffer.from(buf)).toString("base64");
 			return "u" + Codec.HoloHash.holoHashStringFromB64(rawBase64);
 		},
 		decode: (base64) => {

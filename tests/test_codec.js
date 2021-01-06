@@ -74,37 +74,6 @@ describe("Codec.Base36", () => {
 	});
 });
 
-describe("Codec.Base64", () => {
-	it("should decode base64 string into buffer", async () => {
-		const hashString				= "hCAkTFYCB48/Bx/QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q";
-		const dataBytes					= new Uint8Array([
-			132, 32,  36,  76, 	86, 	2, 	 7,   143, 
-			63,  7,   31,  208, 188,  164, 15,  85, 
-			43,  151, 1,   95, 	44, 	44,  114, 137, 
-			94,  184, 122, 101, 47, 	24,  85,  237,
-			140, 118, 203, 210, 129, 206,  234
-		]);
-		const hashBuf					 = Buffer.from(dataBytes)
-
-			expect( Codec.Base64.decode(hashString)).to.deep.equal(hashBuf);
-	});
-
-	it("should encode buffer into base64 string", async () => {
-		const dataBytes					= new Uint8Array([
-			132, 32,  36,  76, 	86, 	2, 	 7,   143, 
-			63,  7,   31,  208, 188,  164, 15,  85, 
-			43,  151, 1,   95, 	44, 	44,  114, 137, 
-			94,  184, 122, 101, 47, 	24,  85,  237,
-			140, 118, 203, 210, 129, 206,  234
-		]);
-		const hashBuf					 = Buffer.from(dataBytes)
-		const base64String				 = "hCAkTFYCB48/Bx/QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q";
-
-		expect( Codec.Base64.encode(hashBuf)).to.equal(base64String);
-	});
-});
-
-
 describe("Codec.Signature", () => {
 	it("should decode Signature string into message bytes", async () => {
 		const messageBytes				= Buffer.from("example 1");

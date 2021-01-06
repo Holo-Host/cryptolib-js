@@ -81,17 +81,6 @@ const Codec = {
 		decode: (str) => base36.decode(str),
 		encode: (buf) => base36.encode(Buffer.from(buf)),
 	},
-	"Base64": {
-		decode: (base64) => {
-			const byteString = Buffer.from(base64, "base64").toString("binary");
-			const buffer = Buffer.alloc(byteString.length);
-			for(let i = 0; i < byteString.length; i++) {
-					buffer[i] = byteString.charCodeAt(i);
-			}
-			return buffer
-		},
-		encode: (buf) => Buffer.from(buf).toString("base64"),
-	},
 	"HoloHash": {
 		holoHashStringFromB64: (base64) => convert_b64_to_holohash_b64(base64),
 		holoHashFromBuffer: (holoHashType, buf) => {
@@ -113,7 +102,7 @@ const Codec = {
 				const holoHashPrefix = getHoloHashPrefix(holoHashType.toLowerCase());
 				if (Buffer.compare(compareBuf, holoHashPrefix) === 0) {
 					// encoding from holohash buffer
-					return "u" + Codec.HoloHash.holoHashStringFromB64(Codec.Base64.encode(buf));
+					return "u" + Codec.HoloHash.holoHashStringFromB64(Buffer.from(buf).toString("base64"));
 				} else {
 					throw new Error(`Unexpected buffer length of ${Buffer.byteLength(buf)}.  Buffer should be 32 bytes.`);
 				}
@@ -130,16 +119,16 @@ const Codec = {
 	},
 	"Signature": {
 		decode: (base64) => Buffer.from(base64, "base64"),
-		encode: (buf) => Codec.Base64.encode(Buffer.from(buf)),
+		encode: (buf) => Buffer.from(buf).toString("base64"),
 	},
 	"Digest": {
-		decode: (base64) => multihash.decode(Codec.Base64.decode(base64)).digest,
+		decode: (base64) => multihash.decode(Buffer.from(base64, "base64")).digest,
 		encode: (data) => {
 			let buf = data;
 			if(!Buffer.isBuffer(data) ) {
 				buf = Buffer.from( typeof data === "string" ? data : SerializeJSON( data ) );
 			}
-			return Codec.Base64.encode(Buffer.from(multihash.encode(buf, "sha2-256")));
+			return Buffer.from(multihash.encode(buf, "sha2-256")).toString("base64");
 		},
 	},
 };

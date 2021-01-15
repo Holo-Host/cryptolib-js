@@ -23,13 +23,14 @@ const sha256 = (buf) => crypto.createHash('sha256').update( Buffer.from(buf) ).d
 /* AgentId */
 const agentHoloHashb64 = "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
 Codec.AgentId.decodeToHoloHash( agentHoloHashb64 );
-// Buffer.from( "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp", "base64" );
+// Buffer.from( "hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp", "base64" );
 
-Codec.AgentId.decode("uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp");
+const holoHashAgentId = "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
+Codec.AgentId.decode(holoHashAgentId);
 // Buffer.from( "od6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHE", "base64" );
 
 const publicKeyb64 = "od6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHE";
-const publicKeyBuffer            =  Buffer.from(publicKeyb64, "base64");
+const publicKeyBuffer =  Buffer.from(publicKeyb64, "base64");
 Codec.AgentId.encode(publicKeyBuffer);
 // "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp"
 
@@ -42,7 +43,7 @@ Codec.Digest.decode(hashString);
 const holoHashType = "entry";
 const rawBuffer = Buffer.from("WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64");
 Codec.Digest.holoHashFromBuffer(holoHashType, rawBuffer);
-// Buffer.from("uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm", "base64");
+// Buffer.from("hCEkWCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcEwyBzm", "base64");
 
 const holoHashType = "entry";
 const rawBuffer = Buffer.from("WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64");

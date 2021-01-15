@@ -5,43 +5,24 @@ const { Codec }						= require('../src/index.js');
 describe("Codec.AgentId", () => {
 	it("should decode HoloHash agent ID into HoloHash agent pubkey buffer", async () => {
 		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
-		const holohashPubKey					= new Uint8Array([
-			132,  32,  36, 161, 222, 128, 146, 233,
-			128,  11, 197,  77,  22,   0, 199, 102,
-			199, 105,  12,  19, 193,  24, 250,  79,
-			198, 221, 144, 203,  23, 155, 141, 142,
-			179, 124, 113, 144,  10,  68, 169
-		]);
-		const holohashPubKeyBuffer            =  Buffer.from(holohashPubKey);
+		const agentHoloHashb64			= "hCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
+		const holohashPubKeyBuffer            = Buffer.from(agentHoloHashb64, "base64" );
 
 		expect( Codec.AgentId.decodeToHoloHash(agentId)).to.deep.equal(holohashPubKeyBuffer);
 	});
 
 	it("should decode HoloHash agent ID into public key buffer", () => {
 		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
-		const publicKey					= new Uint8Array([
-			161, 222, 128, 146, 233, 128,  11,
-			197,  77,  22,   0, 199, 102, 199,
-			105,  12,  19, 193,  24, 250,  79,
-			198, 221, 144, 203,  23, 155, 141,
-			142, 179, 124, 113
-		]);
-		const publicKeyBuffer            =  Buffer.from(publicKey);
+		const publicKeyb64 				= "od6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHE";
+		const publicKeyBuffer           =  Buffer.from(publicKeyb64, "base64");
 
 		expect( Codec.AgentId.decode(agentId)		).to.deep.equal(publicKeyBuffer);
 	});
 
 	it("should encode public key buffer into HoloHash agent ID", () => {
+		const publicKeyb64 				= "od6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHE";
+		const publicKeyBuffer           =  Buffer.from(publicKeyb64, "base64");
 		const agentId					= "uhCAkod6AkumAC8VNFgDHZsdpDBPBGPpPxt2QyxebjY6zfHGQCkSp";
-		const publicKey					= new Uint8Array([
-			161, 222, 128, 146, 233, 128,  11,
-			197,  77,  22,   0, 199, 102, 199,
-			105,  12,  19, 193,  24, 250,  79,
-			198, 221, 144, 203,  23, 155, 141,
-			142, 179, 124, 113
-		]);
-		const publicKeyBuffer            =  Buffer.from(publicKey);
-
 		expect( Codec.AgentId.encode(publicKeyBuffer)		).to.equal(agentId);
 	});
 });
@@ -49,26 +30,14 @@ describe("Codec.AgentId", () => {
 describe("Codec.Base36", () => {
 	it("should decode agent ID using base36", async () => {
 		const urlAgentId				= "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";
-		const publicKey					= new Uint8Array([
-			1,   2,   3,   4,   5,   6,   7,
-			8,   9,  10,  11,  12,  13,  14,
-			15,  16,  17,  18,  19,  20,  21,
-			22,  23,  24,  25,  26,  27,  28,
-			29,  30,  31,  32
-		]);
+		const publicKey					= Buffer.from("AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=", "base64");
 
 		expect( Codec.Base36.encode(publicKey)		).to.equal(urlAgentId);
 	});
 
 	it("should encode agent ID into base36", async () => {
+		const publicKey					= Buffer.from("AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=", "base64");
 		const urlAgentId				= "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";
-		const publicKey					= new Uint8Array([
-			1,   2,   3,   4,   5,   6,   7,
-			8,   9,  10,  11,  12,  13,  14,
-			15,  16,  17,  18,  19,  20,  21,
-			22,  23,  24,  25,  26,  27,  28,
-			29,  30,  31,  32
-		]);
 
 		expect( Codec.Base36.encode(publicKey)		).to.equal(urlAgentId);
 	});
@@ -99,81 +68,40 @@ describe("Codec.HoloHash", () => {
 	});
 
 	it("should return holohash buffer from raw buffer", () => {
-		const dataBytes					= new Uint8Array([
-			88,	 43,  0,	 130,	130, 164, 145, 252,
-			50,	 36,  8,	 37,	143, 125, 49,	 95,
-			241, 139, 45,	 95,	183, 5,		123, 133,	
-			203, 141,	250, 107,	100, 170, 165, 193
-		]);
-		const dataBuffer            =  Buffer.from(dataBytes);
-
-		const holoHashBytes					= new Uint8Array([
-			132, 33,  36,	 88,	43,  0,	 	130, 130,
-			164, 145, 252, 50,	36,  8,   37,	 143,
-			125, 49,  95,  241, 139, 45,  95,	 183,
-			5,	 123, 133, 203, 141, 250, 107, 100, 
-			170, 165, 193, 48,  200, 28,  230
-		]);
-
-		const holoHashBuffer            =  Buffer.from(holoHashBytes);
+		const dataBuffer            	=  Buffer.from("WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64");
+		const holoHashBuffer            =  Buffer.from("hCEkWCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcEwyBzm", "base64");
 
 		expect( Codec.HoloHash.holoHashFromBuffer('entry', dataBuffer)	).to.deep.equal(holoHashBuffer);
 	});
 
 	it("should decode HoloHash string into raw buffer", async () => {
 		const hashString				= "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
-		const hashBytes					= new Uint8Array([
-			88,	 43,  0,	 130,	130, 164, 145, 252,
-			50,	 36,  8,	 37,	143, 125, 49,	 95,
-			241, 139, 45,	 95,	183, 5,		123, 133,	
-			203, 141,	250, 107,	100, 170, 165, 193
-		]);
-		const hashBuffer            =  Buffer.from(hashBytes)
+		const hashBuffer            	=  Buffer.from( "WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64" );
 
 		expect( Codec.HoloHash.decode(hashString)).to.deep.equal(hashBuffer);
 	});
 
 	it("should encode raw buffer into HoloHash string", async () => {
-		const bytes					= new Uint8Array([
-			88,	 43,  0,	 130,	130, 164, 145, 252,
-			50,	 36,  8,	 37,	143, 125, 49,	 95,
-			241, 139, 45,	 95,	183, 5,		123, 133,	
-			203, 141,	250, 107,	100, 170, 165, 193
-		]);
-
-		const buffer            =  Buffer.from(bytes);
-
+		const rawBuffer 				= Buffer.from("WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64");
 		const hashString				=  "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 
-		expect( Codec.HoloHash.encode('entry', buffer)).to.equal(hashString);
+		expect( Codec.HoloHash.encode('entry', rawBuffer)).to.equal(hashString);
 	});
 
 	it("should encode holohash buffer into HoloHash string", async () => {
-		const holoHashBytes					= new Uint8Array([
-			132, 33,  36,	 88,	43,  0,	 	130, 130,
-			164, 145, 252, 50,	36,  8,   37,	 143,
-			125, 49,  95,  241, 139, 45,  95,	 183,
-			5,	 123, 133, 203, 141, 250, 107, 100, 
-			170, 165, 193, 48,  200, 28,  230
-		]);
-
-		const holoHashBuffer            =  Buffer.from(holoHashBytes);
-
+		const holoHashBuffer   			= Buffer.from("hCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm", "base64");
 		const hashString				=  "uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm";
 
 		expect( Codec.HoloHash.encode('entry', holoHashBuffer)).to.equal(hashString);
 	});
 });
 
-
 describe("Codec.Digest", () => {
 	it("should decode SHA-256 multihash into SHA-256 digest buffer", async () => {
 		const hashString				=  "EnV7InN0ZXBzIjp7ImJhc2UiOjY0LCJwcm9jZXNzIjpbImRhdGEgd2lsbCBiZSBoYXNoZWQgaW50byBhIiwic2hhMjU2IG11bHRpaGFzaCB0aGVuIiwiZW5jb2RlZCJdfSwidGVzdCI6ImluZm9ybWF0aW9uIn0=";
-		const hashBytes					= new Uint8Array([
-			123,34,115,116,101,112,115,34,58,123,34,98,97,115,101,34,58,54,52,44,34,112,114,111,99,101,115,115,34,58,91,34,100,97,116,97,32,119,105,108,108,32,98,101,32,104,97,115,104,101,100,32,105,110,116,111,32,97,34,44,34,115,104,97,50,53,54,32,109,117,108,116,105,104,97,115,104,32,116,104,101,110,34,44,34,101,110,99,111,100,101,100,34,93,125,44,34,116,101,115,116,34,58,34,105,110,102,111,114,109,97,116,105,111,110,34,125
-		]);
-		const hashBuffer            =  Buffer.from(hashBytes)
-		expect( Codec.Digest.decode(hashString)).to.deep.equal(hashBuffer);
+		const hashDigest				= "eyJzdGVwcyI6eyJiYXNlIjo2NCwicHJvY2VzcyI6WyJkYXRhIHdpbGwgYmUgaGFzaGVkIGludG8gYSIsInNoYTI1NiBtdWx0aWhhc2ggdGhlbiIsImVuY29kZWQiXX0sInRlc3QiOiJpbmZvcm1hdGlvbiJ9";
+		const digestBuffer            	=  Buffer.from(hashDigest, "base64");
+		expect( Codec.Digest.decode(hashString)).to.deep.equal(digestBuffer);
 	});
 
 	it("should encode stringified data into base64 encoded SHA-256 multihash", async () => {
@@ -191,13 +119,10 @@ describe("Codec.Digest", () => {
 	});
 
 	it("should encode sha256 digest buffer into base64 encoded SHA-256 multihash", async () => {
-		const hashBytes					= new Uint8Array([
-			123,34,115,116,101,112,115,34,58,123,34,98,97,115,101,34,58,54,52,44,34,112,114,111,99,101,115,115,34,58,91,34,100,97,116,97,32,119,105,108,108,32,98,101,32,104,97,115,104,101,100,32,105,110,116,111,32,97,34,44,34,115,104,97,50,53,54,32,109,117,108,116,105,104,97,115,104,32,116,104,101,110,34,44,34,101,110,99,111,100,101,100,34,93,125,44,34,116,101,115,116,34,58,34,105,110,102,111,114,109,97,116,105,111,110,34,125
-		]);
-		const hashBuffer            =  Buffer.from(hashBytes)
+		const hashDigest					= "eyJzdGVwcyI6eyJiYXNlIjo2NCwicHJvY2VzcyI6WyJkYXRhIHdpbGwgYmUgaGFzaGVkIGludG8gYSIsInNoYTI1NiBtdWx0aWhhc2ggdGhlbiIsImVuY29kZWQiXX0sInRlc3QiOiJpbmZvcm1hdGlvbiJ9";
+		const digestBuffer           	 	=  Buffer.from(hashDigest, "base64");
+		const hashString					=  "EnV7InN0ZXBzIjp7ImJhc2UiOjY0LCJwcm9jZXNzIjpbImRhdGEgd2lsbCBiZSBoYXNoZWQgaW50byBhIiwic2hhMjU2IG11bHRpaGFzaCB0aGVuIiwiZW5jb2RlZCJdfSwidGVzdCI6ImluZm9ybWF0aW9uIn0=";
 		
-		const hashString				=  "EnV7InN0ZXBzIjp7ImJhc2UiOjY0LCJwcm9jZXNzIjpbImRhdGEgd2lsbCBiZSBoYXNoZWQgaW50byBhIiwic2hhMjU2IG11bHRpaGFzaCB0aGVuIiwiZW5jb2RlZCJdfSwidGVzdCI6ImluZm9ybWF0aW9uIn0=";
-		
-		expect( Codec.Digest.encode(hashBuffer)).to.equal(hashString);
+		expect( Codec.Digest.encode(digestBuffer)).to.equal(hashString);
 	});
 });

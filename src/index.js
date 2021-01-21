@@ -5,6 +5,13 @@ const multihash				= require("multihashes");
 const SerializeJSON				= require("json-stable-stringify");
 const base36				= require("base-x")("0123456789abcdefghijklmnopqrstuvwxyz");
 
+const HHT = Object.freeze({
+  AGENT:   "agent",
+  HEADER:  "header",
+  ENTRY: "entry",
+  DNA: "dna",
+});
+
 const HOLO_HASH_AGENT_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x20, 0x24]).buffer);
 const HOLO_HASH_HEADER_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x29, 0x24]).buffer);
 const HOLO_HASH_ENTRY_PREFIX		= Buffer.from(new Uint8Array([0x84, 0x21, 0x24]).buffer);
@@ -13,16 +20,16 @@ const HOLO_HASH_DNA_PREFIX		    = Buffer.from(new Uint8Array([0x84, 0x2d, 0x24])
 const getHoloHashPrefix = holoHashType => {
 	let holoHashPrefix;
 	switch (holoHashType) {
-		case "agent":
+		case HHT.AGENT:
 			holoHashPrefix = HOLO_HASH_AGENT_PREFIX;
 			break;
-		case "header":
+		case HHT.HEADER:
 			holoHashPrefix = HOLO_HASH_HEADER_PREFIX;
 			break;
-		case "entry":
+		case HHT.ENTRY:
 			holoHashPrefix = HOLO_HASH_ENTRY_PREFIX;
 			break;
-		case "dna":
+		case HHT.DNA:
 			holoHashPrefix = HOLO_HASH_DNA_PREFIX;
 			break;
 		default:
@@ -137,4 +144,5 @@ module.exports = {
     KeyManager,
     deriveSeedFrom,
     Codec,
+    HHT,
 };

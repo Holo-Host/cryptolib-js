@@ -89,7 +89,6 @@ const Codec = {
 		encode: (buf) => base36.encode(Buffer.from(buf)),
 	},
 	"HoloHash": {
-		holoHashStringFromB64: (base64) => convert_b64_to_holohash_b64(base64),
 		holoHashFromBuffer: (holoHashType, buf) => {
 			const holoHashPrefix = getHoloHashPrefix(holoHashType);
 			check_length(Buffer.from(buf), 32);
@@ -109,14 +108,14 @@ const Codec = {
 				const holoHashPrefix = getHoloHashPrefix(holoHashType.toLowerCase());
 				if (Buffer.compare(compareBuf, holoHashPrefix) === 0) {
 					// encoding from holohash buffer
-					return "u" + Codec.HoloHash.holoHashStringFromB64(Buffer.from(buf).toString("base64"));
+					return "u" + convert_b64_to_holohash_b64(Buffer.from(buf).toString("base64"));
 				} else {
 					throw new Error(`Unexpected buffer length of ${Buffer.byteLength(buf)}.  Buffer should be 32 bytes.`);
 				}
 			} 
 			// encoding from raw buffer
 			const rawBase64 = Codec.HoloHash.holoHashFromBuffer(holoHashType.toLowerCase(), Buffer.from(buf)).toString("base64");
-			return "u" + Codec.HoloHash.holoHashStringFromB64(rawBase64);
+			return "u" + convert_b64_to_holohash_b64(rawBase64);
 		},
 		decode: (base64) => {
 			const buf = Buffer.from(base64.slice(1), "base64").slice(3,-4);

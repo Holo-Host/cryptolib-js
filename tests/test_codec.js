@@ -60,13 +60,6 @@ describe("Codec.Signature", () => {
 });
 
 describe("Codec.HoloHash", () => {
-	it("should return HoloHash base64 String from raw base64 string", async () => {
-		const base64String				 = "hCAkTFYCB48/Bx/QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q";
-		const HHBase64String			 = "hCAkTFYCB48_Bx_QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q";
-
-		expect( Codec.HoloHash.holoHashStringFromB64(base64String)).to.equal(HHBase64String);
-	});
-
 	it("should return holohash buffer from raw buffer", () => {
 		const dataBuffer            	=  Buffer.from("WCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcE=", "base64");
 		const holoHashBuffer            =  Buffer.from("hCEkWCsAgoKkkfwyJAglj30xX/GLLV+3BXuFy436a2SqpcEwyBzm", "base64");

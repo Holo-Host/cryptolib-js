@@ -55,11 +55,6 @@ const holoHashBuffer = Buffer.from("uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2S
 Codec.Digest.encode(holoHashType, holoHashBuffer);
 // uhCEkWCsAgoKkkfwyJAglj30xX_GLLV-3BXuFy436a2SqpcEwyBzm
 
-const base64String				 = "hCAkTFYCB48/Bx/QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q";
-Codec.Digest.holoHashStringFromB64(base64String);
-// "hCAkTFYCB48_Bx_QvKQPVSuXAV8sLHKJXrh6ZS8YVe2MdsvSgc7q"
-
-
 /* Signature */
 const messageBytes = Buffer.from("example 1");
 const base64String = "ZXhhbXBsZSAx";

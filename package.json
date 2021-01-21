@@ -20,7 +20,7 @@
     "src/*"
   ],
   "dependencies": {
-    "@holo-host/wasm-key-manager": "0.0.5",
+    "@holo-host/wasm-key-manager": "1.0.0",
     "base-x": "^3.0.7",
     "blakejs": "^1.1.0",
     "json-stable-stringify": "^1.0.1",

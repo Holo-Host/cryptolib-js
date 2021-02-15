@@ -25,6 +25,17 @@ describe("Codec.AgentId", () => {
   });
 });
 
+it("should encode and decode back agent id", async () => {
+  let string = "uhCAkkeIowX20hXW-9wMyh0tQY5Y73RybHi1BdpKdIdbD26Dl_xwq";
+  let result = Codec.AgentId.encode(Codec.AgentId.decode(string));
+  expect(result).to.equal(string);
+});
+
+it("should throw an error when decoding string with chars outside of Holo base64 set", async () => {
+  let string = "uhCAkkeIowX20hXW+9wMyh0tQY5Y73RybHi1BdpKdIdbD26Dl/xwq";
+  expect(() => Codec.AgentId.decode(string)).to.throw();
+});
+
 describe("Codec.Base36", () => {
   it("should decode agent ID using base36 and then encode agent ID back into base36", async () => {
     const urlAgentId = "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";

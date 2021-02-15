@@ -19,6 +19,8 @@ const HOLO_HASH_HEADER_PREFIX = Buffer.from(new Uint8Array([0x84, 0x29, 0x24]).b
 const HOLO_HASH_ENTRY_PREFIX = Buffer.from(new Uint8Array([0x84, 0x21, 0x24]).buffer);
 const HOLO_HASH_DNA_PREFIX = Buffer.from(new Uint8Array([0x84, 0x2d, 0x24]).buffer);
 
+const HOLO_BASE64_CHAR_SET = /^[A-Za-z0-9\-_]+$/;
+
 const getHoloHashPrefix = holoHashType => {
   let holoHashPrefix;
   switch (holoHashType) {
@@ -44,6 +46,12 @@ function check_length(buf, expectedLength) {
   if (Buffer.byteLength(buf) !== expectedLength)
     throw new Error(`Unexpected buffer length of ${Buffer.byteLength(buf)}.  Buffer should be ${expectedLength} bytes.`);
   return buf;
+}
+
+function check_charset(string) {
+  if (! HOLO_BASE64_CHAR_SET.test(string))
+  throw new Error(`String ${string} contains characters from outside of Holo base64 character set. Make sure HoloHash base64 encoded string contains only [A-Za-z0-9\-_]`);
+  return string;
 }
 
 function convert_b64_to_holohash_b64(rawBase64) {
@@ -120,6 +128,7 @@ const Codec = {
       return "u" + convert_b64_to_holohash_b64(rawBase64);
     },
     decode: (base64) => {
+      check_charset(base64);
       const buf = Buffer.from(base64.slice(1), "base64").slice(3, -4);
       check_length(Buffer.from(buf), 32);
       return buf;

@@ -1,6 +1,6 @@
 {
   "name": "@holo-host/cryptolib",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Cross-compatible cryptographic utilities for node/web",
   "main": "src/index.js",
   "scripts": {

@@ -38,7 +38,7 @@ it("should throw an error when decoding string with chars outside of Holo base64
 
 describe("Codec.Base36", () => {
   it("should decode agent ID using base36 and then encode agent ID back into base36", async () => {
-    const urlAgentId = "wjzlh5yt3uk0mzpcor0i12ol0rrpxdydzggt4b2fvr8yealc";
+    const urlAgentId = "wjzlh5yt3uk0mzqcor0i12ol0rrqxdydzggt4b2fvr8yealc";
     const publicKey = Buffer.from("AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=", "base64");
 
     expect(Codec.Base36.encode(publicKey)).to.equal(urlAgentId);

@@ -5,7 +5,7 @@ const {
 const blake = require("blakejs");
 const multihash = require("multihashes");
 const SerializeJSON = require("json-stable-stringify");
-const base36 = require("base-x")("0123456789abcdefghijklmnopqrstuvwxyz");
+const base36 = require("base-x")("0123456789abcdefghijklmnoqprstuvwxyz");
 
 const HHT = Object.freeze({
   AGENT: "agent",
@@ -49,8 +49,8 @@ function check_length(buf, expectedLength) {
 }
 
 function check_charset(string) {
-  if (! HOLO_BASE64_CHAR_SET.test(string))
-  throw new Error(`String ${string} contains characters from outside of Holo base64 character set. Make sure HoloHash base64 encoded string contains only [A-Za-z0-9\-_]`);
+  if (!HOLO_BASE64_CHAR_SET.test(string))
+    throw new Error(`String ${string} contains characters from outside of Holo base64 character set. Make sure HoloHash base64 encoded string contains only [A-Za-z0-9\-_]`);
   return string;
 }
 

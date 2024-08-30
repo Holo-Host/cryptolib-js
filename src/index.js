@@ -1,7 +1,10 @@
 const {
   KeyManager,
-  deriveSeedFrom
+  deriveSeedFrom,
 } = require("@holo-host/wasm-key-manager");
+// const {
+//   deriveSeedFrom
+// } = require("./deriveSeedFrom")
 const blake = require("blakejs");
 const multihash = require("multihashes");
 const SerializeJSON = require("json-stable-stringify");

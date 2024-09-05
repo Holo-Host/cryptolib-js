@@ -37,6 +37,11 @@ describe("Key Manager", () => {
     })
 
     it("should sign and verify using derived seed", async () => {
+        const seed = deriveSeedFrom(hha_id, "example2@holo.host", "password")
+        const keys = new KeyManager( seed )
+
+        await wait(100) // wait for pubkey to load
+
         const expectedPubkey = new Uint8Array([
             253, 163, 6, 143, 70, 91, 132, 195, 
             250, 73, 221, 250, 186, 8, 83, 172, 
@@ -44,30 +49,27 @@ describe("Key Manager", () => {
             40, 226, 241, 43, 45, 119, 221, 134,         
         ])
 
-        const expectedSignature = new Uint8Array([
-            121, 105, 219, 165, 125, 230, 134, 244, 134, 164, 10, 240, 125, 89, 255, 226, 115, 5, 130, 19, 184, 226, 212, 2, 104, 13, 217, 222, 84, 54, 80, 103, 205, 34, 46, 215, 30, 68, 130, 60, 147, 207, 7, 46, 54, 238, 19, 255, 28, 209, 186, 5, 247, 198, 204, 84, 189, 233, 90, 230, 65, 24, 67, 5 
-        ])
- 
-        const seed = deriveSeedFrom(hha_id, "example2@holo.host", "password")
-        const keys = new KeyManager( seed )
-
-        await wait(100) // wait for pubkey to load
-
         expect ( keys.publicKey() ).to.deep.equal(expectedPubkey)
 
         const message = "Hello, world!"
 
         const signature = keys.sign( message )
 
-        expect( signature ).to.be.an("uint8array")
-        expect( signature ).to.deep.equal( expectedSignature )
 
-        const isGenuine = keys.verify( message, signature )
+        const isGenuine = await keys.verify( message, signature )
 
         expect( isGenuine ).to.be.true
 
-        const isGenuineStatic = KeyManager.verifyWithPublicKey( message, signature, keys.publicKey() )
+        const isGenuineStatic = await KeyManager.verifyWithPublicKey( message, signature, keys.publicKey() )
 
         expect( isGenuineStatic ).to.be.true
+
+        const expectedSignature = new Uint8Array([
+            121, 105, 219, 165, 125, 230, 134, 244, 134, 164, 10, 240, 125, 89, 255, 226, 115, 5, 130, 19, 184, 226, 212, 2, 104, 13, 217, 222, 84, 54, 80, 103, 205, 34, 46, 215, 30, 68, 130, 60, 147, 207, 7, 46, 54, 238, 19, 255, 28, 209, 186, 5, 247, 198, 204, 84, 189, 233, 90, 230, 65, 24, 67, 5 
+        ]) 
+
+        expect( signature ).to.be.an("uint8array")
+        expect( signature ).to.deep.equal( expectedSignature )
+
     })
 })

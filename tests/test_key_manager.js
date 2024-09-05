@@ -3,6 +3,8 @@ const crypto = require('crypto')
 
 const { KeyManager, deriveSeedFrom } = require('../src/index.js')
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const hha_id = new Uint8Array([
     66, 123, 133, 136, 133,   6, 247, 116,
      4,  59,  43, 206, 131, 168, 123,  44,
@@ -14,6 +16,8 @@ describe("Key Manager", () => {
     it("should create KeyManager instance with random bytes", async () => {
         const seed = crypto.randomBytes( 32 )
         const keys = new KeyManager( seed )
+
+        await wait(100) // wait for pubkey to load
 
         expect( keys.publicKey() ).to.be.a("uint8array")
     })
@@ -43,11 +47,11 @@ describe("Key Manager", () => {
         const expectedSignature = new Uint8Array([
             121, 105, 219, 165, 125, 230, 134, 244, 134, 164, 10, 240, 125, 89, 255, 226, 115, 5, 130, 19, 184, 226, 212, 2, 104, 13, 217, 222, 84, 54, 80, 103, 205, 34, 46, 215, 30, 68, 130, 60, 147, 207, 7, 46, 54, 238, 19, 255, 28, 209, 186, 5, 247, 198, 204, 84, 189, 233, 90, 230, 65, 24, 67, 5 
         ])
-
-        121, 105, 219, 165, 125, 230, 134, 244, 134, 164, 10, 240, 125, 89, 255, 226, 115, 5, 130, 19, 184, 226, 212, 2, 104, 13, 217, 222, 84, 54, 80, 103, 205, 34, 46, 215, 30, 68, 130, 60, 147, 207, 7, 46, 54, 238, 19, 255, 28, 209, 186, 5, 247, 198, 204, 84, 189, 233, 90, 230, 65, 24, 67, 5
  
         const seed = deriveSeedFrom(hha_id, "example2@holo.host", "password")
         const keys = new KeyManager( seed )
+
+        await wait(100) // wait for pubkey to load
 
         expect ( keys.publicKey() ).to.deep.equal(expectedPubkey)
 

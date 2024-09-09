@@ -5,6 +5,7 @@ class KeyManager {
     #ed
 
     constructor (seed) {
+        throw new Error("javascript KeyManager is not implemented yet")
         // as per the rust implementation, private_key is just the seed
         this.#private_key = seed
     

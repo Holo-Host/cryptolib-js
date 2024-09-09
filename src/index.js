@@ -1,7 +1,3 @@
-const {
-  deriveSeedFrom
-} = require("./deriveSeedFrom")
-const KeyManager = require("./keyManager")
 const blake = require("blakejs");
 const multihash = require("multihashes");
 const SerializeJSON = require("json-stable-stringify");
@@ -151,8 +147,6 @@ const Codec = {
 };
 
 module.exports = {
-  KeyManager,
-  deriveSeedFrom,
   Codec,
   HHT,
 };

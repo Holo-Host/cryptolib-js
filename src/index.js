@@ -1,3 +1,7 @@
+const {
+  deriveSeedFrom
+} = require("./deriveSeedFrom")
+const KeyManager = require("./keyManager")
 const blake = require("blakejs");
 const multihash = require("multihashes");
 const SerializeJSON = require("json-stable-stringify");

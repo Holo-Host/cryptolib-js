@@ -151,8 +151,6 @@ const Codec = {
 };
 
 module.exports = {
-  KeyManager,
-  deriveSeedFrom,
   Codec,
   HHT,
 };

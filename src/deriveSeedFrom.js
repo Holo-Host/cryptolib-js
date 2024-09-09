@@ -1,3 +1,4 @@
+// See opening comment in `keyManager.js`
 
 const { sha512 } = require("js-sha512")
 const argon2 = require("argon2-browser")
@@ -31,8 +32,6 @@ function deriveSeedFrom(hha_id, email, password) {
     //  secret: new Uint8Array([...]), // optional secret data <- hha_id
     //  ad: new Uint8Array([...]), // optional associated data
     // }
-
-    console.log("^&* seed", seed)
 
     return seed
 }

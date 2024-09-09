@@ -5,10 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## unreleased
 
-## [0.4.0] - 2024-09-04
+## [0.4.0] - 2024-09-09
 
 ### Removed
-- sample [(#335)]
+- Re-exporting of `@holo-host/wasm-key-manager` [(#13)]
 
-[#335]: https://github.com/Holo-Host/envoy-chaperone/pull/335
+### Added
+- Placeholder js implementations of `KeyManager` and `deriveSeedFrom` [(#13)]
+
+[#13]: https://github.com/Holo-Host/cryptolib-js/pull/13
 

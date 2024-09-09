@@ -12,7 +12,9 @@ const hha_id = new Uint8Array([
     63,  26, 216, 191,  67, 117,  38, 142
 ])
 
-describe("Key Manager", () => {
+// See opening comment in `src/keyManager.js` for explanation as to why these are skipped
+
+describe.skip("Key Manager", () => {
     it("should create KeyManager instance with random bytes", async () => {
         const seed = crypto.randomBytes( 32 )
         const keys = new KeyManager( seed )
